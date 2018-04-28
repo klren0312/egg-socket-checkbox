@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <label for="v1">
+    <input type="checkbox" onclick="handleClick(this)" id="v1" value="1"> v1
+  </label>
+  <label for="v2">
+    <input type="checkbox" onclick="handleClick(this)" id="v2" value="2"> v2
+  </label>
+  <label for="v3">
+    <input type="checkbox" onclick="handleClick(this)" id="v3" value="3"> v3
+  </label>
+  <label for="v4">
+    <input type="checkbox" onclick="handleClick(this)" id="v4" value="4"> v4
+  </label>
+  <label for="v5">
+    <input type="checkbox" onclick="handleClick(this)" id="v5" value="5"> v5
+  </label>
+  <label for="v6">
+    <input type="checkbox" onclick="handleClick(this)" id="v6" value="6"> v6
+  </label>
+  <script src="https://cdn.bootcss.com/socket.io/2.1.0/socket.io.js"></script>
+  <script>
+    const socket = io('http://localhost:7001/')
+    function handleClick(cb) {
+      console.log(cb.id);
+      socket.emit('check', {
+        id:cb.id,
+        checked:cb.checked
+      })
+    }
+    socket.on('connect' , () => {
+      socket.on('check', msg => {
+        document.getElementById(msg.id).checked = msg.checked
+        // console.log(msg)
+      })
+      socket.on('old', msg => {
+        console.log(msg)
+        msg.map((v,i) => {
+          console.log(v)
+          document.getElementById(v.name).checked = eval(v.checked)
+        })
+      })
+    })
+  </script>
+</body>
+</html>
