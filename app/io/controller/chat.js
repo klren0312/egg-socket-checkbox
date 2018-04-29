@@ -10,7 +10,7 @@ class ChatController extends Controller {
     const {ctx, app} = this
     const nsp = app.io.of('/')
     const message = ctx.args[0] || {}
-    app.redis.set(message.id, message.checked)
+    app.redis.set(message.id, message.checked, 'EX', 10*60)
     ctx.socket.broadcast.emit('check', message)
   }
 }
